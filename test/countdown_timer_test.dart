@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:responsive_countdown_timer/countdown_timer_package.dart';
+import 'package:flutter_advanced_countdown/flutter_advanced_countdown.dart';
 
 void main() {
   group('CountdownTimerProvider Tests', () {

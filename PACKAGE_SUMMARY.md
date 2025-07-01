@@ -20,7 +20,7 @@ This document summarizes the professional improvements made to transform the ori
 
 ### 1. Package Structure
 ```
-countdown_timer_package/
+flutter_advanced_countdown/
 ├── lib/
 │   ├── countdown_timer_package.dart (main library file)
 │   └── src/
@@ -185,7 +185,7 @@ countdown_timer_package/
    import 'package:printer_app_vfairs/CustomWidgets/advanced_countdown_timer.dart';
    
    // New
-   import 'package:countdown_timer_package/countdown_timer_package.dart';
+   import 'package:flutter_advanced_countdown/flutter_advanced_countdown.dart';
    ```
 
 2. **Update widget usage**:

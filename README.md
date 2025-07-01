@@ -24,7 +24,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  countdown_timer_package: ^1.0.0
+  flutter_advanced_countdown: ^1.0.0
 ```
 
 ## Quick Start
@@ -32,7 +32,7 @@ dependencies:
 ### Basic Usage
 
 ```dart
-import 'package:countdown_timer_package/countdown_timer_package.dart';
+import 'package:flutter_advanced_countdown/flutter_advanced_countdown.dart';
 
 // Simple responsive countdown timer
 AdvancedCountdownTimer(

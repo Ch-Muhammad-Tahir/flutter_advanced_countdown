@@ -1,7 +1,7 @@
-name: responsive_countdown_timer
+name: flutter_advanced_countdown
 description: A professional, feature-rich countdown timer package for Flutter with full responsive design, multiple display styles, themes, and customization options for all devices.
 version: 1.0.0
-homepage: https://github.com/your-username/responsive_countdown_timer
+homepage: https://github.com/Ch-Muhammad-Tahir/flutter_advanced_countdown
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
