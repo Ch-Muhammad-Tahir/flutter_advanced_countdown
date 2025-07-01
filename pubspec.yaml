@@ -1,0 +1,20 @@
+name: responsive_countdown_timer
+description: A professional, feature-rich countdown timer package for Flutter with full responsive design, multiple display styles, themes, and customization options for all devices.
+version: 1.0.0
+homepage: https://github.com/your-username/responsive_countdown_timer
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.0
+
+flutter:
+  # No assets needed for this package 
