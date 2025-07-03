@@ -284,12 +284,16 @@ void main() {
     });
 
     test('should create gradient theme correctly', () {
-      final gradient = LinearGradient(colors: [Colors.purple, Colors.blue]);
-      final theme = CountdownTheme.gradient(gradient: gradient);
+      final gradient = LinearGradient(
+        colors: [Colors.purple, Colors.blue],
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+      );
+      final theme = CountdownTheme.gradient(colors: [Colors.purple, Colors.blue]);
       
       expect(theme.gradient, gradient);
-      expect(theme.primaryColor, Colors.white);
-      expect(theme.borderColor, Colors.transparent);
+      expect(theme.textColor, Colors.white);
+      expect(theme.iconColor, Colors.white);
     });
 
     test('should copy theme correctly', () {

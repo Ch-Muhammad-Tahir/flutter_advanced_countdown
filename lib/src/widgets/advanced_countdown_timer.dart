@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import '../models/countdown_config.dart';
 import '../models/countdown_style.dart';
@@ -61,6 +62,72 @@ class AdvancedCountdownTimer extends StatefulWidget {
   /// Whether to use responsive sizing (default: true)
   final bool useResponsiveSizing;
 
+  /// Custom animation configuration
+  final CountdownAnimationConfig? animationConfig;
+
+  /// Custom builder configuration
+  final CountdownCustomBuilderConfig? customBuilderConfig;
+
+  /// Advanced styling configuration
+  final CountdownAdvancedStyle? advancedStyle;
+
+  /// Custom decoration
+  final Decoration? decoration;
+
+  /// Custom foreground decoration
+  final Decoration? foregroundDecoration;
+
+  /// Custom width
+  final double? width;
+
+  /// Custom height
+  final double? height;
+
+  /// Custom min width
+  final double? minWidth;
+
+  /// Custom min height
+  final double? minHeight;
+
+  /// Custom max width
+  final double? maxWidth;
+
+  /// Custom max height
+  final double? maxHeight;
+
+  /// Whether to show time units (hours, minutes, seconds)
+  final bool showTimeUnits;
+
+  /// Custom time unit labels
+  final Map<String, String>? timeUnitLabels;
+
+  /// Whether to enable sound notifications
+  final bool enableSoundNotifications;
+
+  /// Custom sound file path
+  final String? customSoundPath;
+
+  /// Whether to show warning when time is low
+  final bool showLowTimeWarning;
+
+  /// Low time warning threshold (seconds)
+  final int lowTimeWarningThreshold;
+
+  /// Custom warning color
+  final Color? warningColor;
+
+  /// Whether to enable auto-hide when finished
+  final bool autoHideWhenFinished;
+
+  /// Auto-hide delay
+  final Duration autoHideDelay;
+
+  /// Whether to enable vibration feedback
+  final bool enableVibrationFeedback;
+
+  /// Custom vibration pattern
+  final List<int>? vibrationPattern;
+
   AdvancedCountdownTimer({
     Key? key,
     CountdownConfig? config,
@@ -90,6 +157,28 @@ class AdvancedCountdownTimer extends StatefulWidget {
     this.progressBackgroundColor,
     this.progressValueColor,
     this.useResponsiveSizing = true,
+    this.animationConfig,
+    this.customBuilderConfig,
+    this.advancedStyle,
+    this.decoration,
+    this.foregroundDecoration,
+    this.width,
+    this.height,
+    this.minWidth,
+    this.minHeight,
+    this.maxWidth,
+    this.maxHeight,
+    this.showTimeUnits = false,
+    this.timeUnitLabels,
+    this.enableSoundNotifications = false,
+    this.customSoundPath,
+    this.showLowTimeWarning = true,
+    this.lowTimeWarningThreshold = 10,
+    this.warningColor,
+    this.autoHideWhenFinished = false,
+    this.autoHideDelay = const Duration(seconds: 3),
+    this.enableVibrationFeedback = false,
+    this.vibrationPattern,
   }) : config = config ?? CountdownConfig(
          duration: duration ?? const Duration(minutes: 1),
          interval: interval,
@@ -133,6 +222,28 @@ class AdvancedCountdownTimer extends StatefulWidget {
     this.progressBackgroundColor,
     this.progressValueColor,
     this.useResponsiveSizing = true,
+    this.animationConfig,
+    this.customBuilderConfig,
+    this.advancedStyle,
+    this.decoration,
+    this.foregroundDecoration,
+    this.width,
+    this.height,
+    this.minWidth,
+    this.minHeight,
+    this.maxWidth,
+    this.maxHeight,
+    this.showTimeUnits = false,
+    this.timeUnitLabels,
+    this.enableSoundNotifications = false,
+    this.customSoundPath,
+    this.showLowTimeWarning = true,
+    this.lowTimeWarningThreshold = 10,
+    this.warningColor,
+    this.autoHideWhenFinished = false,
+    this.autoHideDelay = const Duration(seconds: 3),
+    this.enableVibrationFeedback = false,
+    this.vibrationPattern,
   }) : config = CountdownConfig(
          duration: duration,
          interval: interval,
@@ -157,15 +268,29 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
   late Duration _remaining;
   bool _isRunning = false;
   bool _isPaused = false;
+  bool _isFinished = false;
+  bool _isVisible = true;
+  bool _isLowTime = false;
+  
+  // Animation controllers
   late AnimationController _animationController;
+  late AnimationController _pulseController;
+  late AnimationController _shakeController;
+  late AnimationController _scaleController;
+  late AnimationController _fadeController;
+  
+  // Animations
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
+  late Animation<double> _pulseAnimation;
+  late Animation<double> _shakeAnimation;
 
   @override
   void initState() {
     super.initState();
     _remaining = widget.config.duration;
     _setupAnimations();
+    _checkLowTime();
     
     if (widget.config.autoStart) {
       _startTimer();
@@ -173,8 +298,32 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
   }
 
   void _setupAnimations() {
+    final animationConfig = _effectiveAnimationConfig;
+    
+    if (!animationConfig.enabled) return;
+    
     _animationController = AnimationController(
-      duration: widget.animationDuration,
+      duration: animationConfig.duration,
+      vsync: this,
+    );
+    
+    _pulseController = AnimationController(
+      duration: const Duration(milliseconds: 500),
+      vsync: this,
+    );
+    
+    _shakeController = AnimationController(
+      duration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
+    
+    _scaleController = AnimationController(
+      duration: animationConfig.duration,
+      vsync: this,
+    );
+    
+    _fadeController = AnimationController(
+      duration: animationConfig.duration,
       vsync: this,
     );
     
@@ -182,25 +331,47 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
       begin: 0.0,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
+      parent: _fadeController,
+      curve: animationConfig.curve,
     ));
     
     _scaleAnimation = Tween<double>(
       begin: 0.8,
       end: 1.0,
     ).animate(CurvedAnimation(
-      parent: _animationController,
+      parent: _scaleController,
       curve: Curves.elasticOut,
     ));
     
+    _pulseAnimation = Tween<double>(
+      begin: 1.0,
+      end: 1.2,
+    ).animate(CurvedAnimation(
+      parent: _pulseController,
+      curve: Curves.easeInOut,
+    ));
+    
+    _shakeAnimation = Tween<double>(
+      begin: 0.0,
+      end: 1.0,
+    ).animate(CurvedAnimation(
+      parent: _shakeController,
+      curve: Curves.easeInOut,
+    ));
+    
     _animationController.forward();
+    _fadeController.forward();
+    _scaleController.forward();
   }
 
   @override
   void dispose() {
     _timer.cancel();
     _animationController.dispose();
+    _pulseController.dispose();
+    _shakeController.dispose();
+    _scaleController.dispose();
+    _fadeController.dispose();
     super.dispose();
   }
 
@@ -217,16 +388,70 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
         if (_remaining.inMilliseconds <= 0) {
           _timer.cancel();
           _isRunning = false;
-          widget.config.onFinish?.call();
-          if (widget.enableHapticFeedback) {
-            HapticFeedback.forCountdownComplete();
-          }
+          _isFinished = true;
+          _handleTimerFinish();
         } else {
           _remaining = _remaining - widget.config.interval;
+          _checkLowTime();
           widget.config.onTick?.call(_remaining);
         }
       });
     });
+  }
+
+  void _handleTimerFinish() {
+    widget.config.onFinish?.call();
+    
+    if (widget.enableHapticFeedback) {
+      HapticFeedback.forCountdownComplete();
+    }
+    
+    if (widget.enableVibrationFeedback) {
+      _triggerVibration();
+    }
+    
+    if (widget.enableSoundNotifications) {
+      _playSound();
+    }
+    
+    if (_effectiveAnimationConfig.enableShakeAnimation) {
+      _shakeController.repeat(reverse: true);
+      Future.delayed(const Duration(seconds: 2), () {
+        _shakeController.stop();
+      });
+    }
+    
+    if (widget.autoHideWhenFinished) {
+      Future.delayed(widget.autoHideDelay, () {
+        if (mounted) {
+          setState(() {
+            _isVisible = false;
+          });
+        }
+      });
+    }
+  }
+
+  void _checkLowTime() {
+    final wasLowTime = _isLowTime;
+    _isLowTime = _remaining.inSeconds <= widget.lowTimeWarningThreshold;
+    
+    if (_isLowTime && !wasLowTime && _effectiveAnimationConfig.enablePulseAnimation) {
+      _pulseController.repeat(reverse: true);
+    } else if (!_isLowTime && wasLowTime) {
+      _pulseController.stop();
+      _pulseController.reset();
+    }
+  }
+
+  void _triggerVibration() {
+    // Implementation for vibration feedback
+    // This would require platform-specific code
+  }
+
+  void _playSound() {
+    // Implementation for sound notifications
+    // This would require audio plugin integration
   }
 
   void _pauseTimer() {
@@ -235,8 +460,13 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
     _timer.cancel();
     setState(() {
       _isPaused = true;
-      _isRunning = false;  // Add this line to fix the resume issue
+      _isRunning = false;
     });
+    
+    if (_effectiveAnimationConfig.enableScaleAnimation) {
+      _scaleController.reverse();
+    }
+    
     widget.config.onPause?.call();
     if (widget.enableHapticFeedback) {
       HapticFeedback.forCountdownPause();
@@ -249,6 +479,11 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
     setState(() {
       _isPaused = false;
     });
+    
+    if (_effectiveAnimationConfig.enableScaleAnimation) {
+      _scaleController.forward();
+    }
+    
     widget.config.onResume?.call();
     if (widget.enableHapticFeedback) {
       HapticFeedback.forCountdownResume();
@@ -262,7 +497,18 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
       _remaining = widget.config.duration;
       _isRunning = false;
       _isPaused = false;
+      _isFinished = false;
+      _isVisible = true;
+      _isLowTime = false;
     });
+    
+    _pulseController.stop();
+    _pulseController.reset();
+    
+    if (_effectiveAnimationConfig.enableScaleAnimation) {
+      _scaleController.forward();
+    }
+    
     widget.config.onReset?.call();
     if (widget.enableHapticFeedback) {
       HapticFeedback.forCountdownReset();
@@ -283,6 +529,24 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
 
   CountdownTheme get _effectiveTheme {
     return widget.theme ?? CountdownTheme.light();
+  }
+
+  CountdownAnimationConfig get _effectiveAnimationConfig {
+    return widget.animationConfig ?? 
+           _effectiveTheme.animationConfig ?? 
+           const CountdownAnimationConfig();
+  }
+
+  CountdownCustomBuilderConfig get _effectiveCustomBuilderConfig {
+    return widget.customBuilderConfig ?? 
+           _effectiveTheme.customBuilderConfig ?? 
+           const CountdownCustomBuilderConfig();
+  }
+
+  CountdownAdvancedStyle get _effectiveAdvancedStyle {
+    return widget.advancedStyle ?? 
+           _effectiveTheme.advancedStyle ?? 
+           const CountdownAdvancedStyle();
   }
 
   /// Get responsive font size for timer text
@@ -306,6 +570,18 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
         return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 28.0);
       case CountdownDisplayStyle.gradient:
         return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 24.0);
+      case CountdownDisplayStyle.digital:
+        return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 32.0);
+      case CountdownDisplayStyle.analog:
+        return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 16.0);
+      case CountdownDisplayStyle.progressBar:
+        return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 14.0);
+      case CountdownDisplayStyle.floating:
+        return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 18.0);
+      case CountdownDisplayStyle.notification:
+        return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 12.0);
+      case CountdownDisplayStyle.custom:
+        return ResponsiveUtils.getResponsiveFontSize(context, base: baseSize ?? 16.0);
     }
   }
 
@@ -333,6 +609,18 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
         case CountdownDisplayStyle.card:
         case CountdownDisplayStyle.gradient:
           return 32.0;
+        case CountdownDisplayStyle.digital:
+          return 24.0;
+        case CountdownDisplayStyle.analog:
+          return 20.0;
+        case CountdownDisplayStyle.progressBar:
+          return 16.0;
+        case CountdownDisplayStyle.floating:
+          return 24.0;
+        case CountdownDisplayStyle.notification:
+          return 16.0;
+        case CountdownDisplayStyle.custom:
+          return 20.0;
         default:
           return 20.0;
       }
@@ -394,28 +682,38 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
 
   @override
   Widget build(BuildContext context) {
+    if (!_isVisible) return const SizedBox.shrink();
+    
     if (widget.customBuilder != null) {
       return widget.customBuilder!(
         context,
         _remaining,
         _isRunning,
         _isPaused,
-        _isPaused ? _resumeTimer : _pauseTimer,
+        _isRunning && !_isPaused ? _pauseTimer : _resumeTimer,
       );
     }
 
-    return AnimatedBuilder(
-      animation: _animationController,
-      builder: (context, child) {
-        return Transform.scale(
-          scale: _scaleAnimation.value,
-          child: Opacity(
-            opacity: _fadeAnimation.value,
-            child: _buildTimerWidget(),
-          ),
-        );
-      },
-    );
+    Widget timerWidget = _buildTimerWidget();
+    
+    // Apply custom builders
+    if (_effectiveCustomBuilderConfig.backgroundBuilder != null) {
+      timerWidget = _effectiveCustomBuilderConfig.backgroundBuilder!(context, timerWidget);
+    }
+    
+    if (_effectiveCustomBuilderConfig.containerBuilder != null) {
+      timerWidget = _effectiveCustomBuilderConfig.containerBuilder!(context, timerWidget);
+    }
+    
+    // Apply animations
+    if (_effectiveAnimationConfig.enabled) {
+      timerWidget = _buildAnimatedWidget(timerWidget);
+    }
+    
+    // Apply advanced styling
+    timerWidget = _applyAdvancedStyling(timerWidget);
+    
+    return timerWidget;
   }
 
   Widget _buildTimerWidget() {
@@ -434,7 +732,151 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
         return _buildCardDisplay();
       case CountdownDisplayStyle.gradient:
         return _buildGradientDisplay();
+      case CountdownDisplayStyle.digital:
+        return _buildDigitalDisplay();
+      case CountdownDisplayStyle.analog:
+        return _buildAnalogDisplay();
+      case CountdownDisplayStyle.progressBar:
+        return _buildProgressBarDisplay();
+      case CountdownDisplayStyle.floating:
+        return _buildFloatingDisplay();
+      case CountdownDisplayStyle.notification:
+        return _buildNotificationDisplay();
+      case CountdownDisplayStyle.custom:
+        return _buildCustomDisplay();
     }
+  }
+
+  Widget _buildAnimatedWidget(Widget child) {
+    final animationConfig = _effectiveAnimationConfig;
+    
+    if (animationConfig.customAnimationBuilder != null) {
+      return animationConfig.customAnimationBuilder!(child, _fadeAnimation);
+    }
+    
+    Widget animatedChild = child;
+    
+    if (animationConfig.enableFadeAnimation) {
+      animatedChild = FadeTransition(
+        opacity: _fadeAnimation,
+        child: animatedChild,
+      );
+    }
+    
+    if (animationConfig.enableScaleAnimation) {
+      animatedChild = ScaleTransition(
+        scale: _scaleAnimation,
+        child: animatedChild,
+      );
+    }
+    
+    if (_isLowTime && animationConfig.enablePulseAnimation) {
+      animatedChild = ScaleTransition(
+        scale: _pulseAnimation,
+        child: animatedChild,
+      );
+    }
+    
+    if (_isFinished && animationConfig.enableShakeAnimation) {
+      animatedChild = AnimatedBuilder(
+        animation: _shakeAnimation,
+        builder: (context, child) {
+          final shakeOffset = math.sin(_shakeAnimation.value * math.pi * 8) * 4;
+          return Transform.translate(
+            offset: Offset(shakeOffset, 0),
+            child: animatedChild,
+          );
+        },
+      );
+    }
+    
+    return animatedChild;
+  }
+
+  Widget _applyAdvancedStyling(Widget child) {
+    final advancedStyle = _effectiveAdvancedStyle;
+    final theme = _effectiveTheme;
+    
+    Widget styledChild = child;
+    
+    // Apply custom decoration
+    if (theme.decoration != null) {
+      styledChild = DecoratedBox(
+        decoration: theme.decoration!,
+        child: styledChild,
+      );
+    }
+    
+    // Apply custom shape
+    if (advancedStyle.shape != null) {
+      styledChild = ClipPath(
+        clipper: ShapeBorderClipper(shape: advancedStyle.shape!),
+        child: styledChild,
+      );
+    }
+    
+    // Apply custom border
+    if (advancedStyle.border != null) {
+      styledChild = Container(
+        decoration: BoxDecoration(border: advancedStyle.border),
+        child: styledChild,
+      );
+    }
+    
+    // Apply custom constraints
+    if (theme.width != null || theme.height != null || 
+        theme.minWidth != null || theme.minHeight != null ||
+        theme.maxWidth != null || theme.maxHeight != null) {
+      styledChild = ConstrainedBox(
+        constraints: BoxConstraints(
+          minWidth: theme.minWidth ?? 0.0,
+          minHeight: theme.minHeight ?? 0.0,
+          maxWidth: theme.maxWidth ?? double.infinity,
+          maxHeight: theme.maxHeight ?? double.infinity,
+        ),
+        child: SizedBox(
+          width: theme.width,
+          height: theme.height,
+          child: styledChild,
+        ),
+      );
+    }
+    
+    // Apply custom alignment
+    if (advancedStyle.alignment != null) {
+      styledChild = Align(
+        alignment: advancedStyle.alignment!,
+        child: styledChild,
+      );
+    }
+    
+    // Apply custom transform
+    if (advancedStyle.transform != null) {
+      styledChild = Transform(
+        transform: advancedStyle.transform!,
+        alignment: advancedStyle.transformAlignment,
+        child: styledChild,
+      );
+    }
+    
+    // Apply foreground decoration
+    if (theme.foregroundDecoration != null) {
+      styledChild = DecoratedBox(
+        decoration: theme.foregroundDecoration!,
+        child: styledChild,
+      );
+    }
+    
+    // Apply semantic properties
+    if (advancedStyle.semanticLabel != null) {
+      styledChild = Semantics(
+        label: advancedStyle.semanticLabel!,
+        excludeSemantics: advancedStyle.excludeFromSemantics ?? false,
+        child: styledChild,
+      );
+    }
+    
+    return styledChild;
   }
 
   Widget _buildCompactDisplay() {
@@ -631,7 +1073,7 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
           SizedBox(width: spacing),
           Expanded(
             child: Text(
-              'Auto-close in ${_formatDuration(_remaining)}',
+              '${widget.titleText ?? ''} ${_formatDuration(_remaining)}',
               style: widget.textStyle ?? _effectiveTheme.textStyle ?? TextStyle(
                 fontSize: _getResponsiveFontSize(context),
                 fontWeight: FontWeight.w500,
@@ -743,11 +1185,346 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
     );
   }
 
+  Widget _buildDigitalDisplay() {
+    final spacing = _getResponsiveSpacing(context);
+    final timeString = _formatDuration(_remaining);
+    final segments = timeString.split(':');
+    
+    return Container(
+      padding: _getResponsivePadding(context),
+      margin: _effectiveTheme.margin,
+      decoration: BoxDecoration(
+        color: _effectiveTheme.backgroundColor ?? Colors.black,
+        borderRadius: BorderRadius.circular(_getResponsiveBorderRadius(context)),
+        boxShadow: _effectiveTheme.boxShadow,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: segments.asMap().entries.map((entry) {
+              final index = entry.key;
+              final segment = entry.value;
+              
+              return Row(
+                children: [
+                  _buildDigitalSegment(segment),
+                  if (index < segments.length - 1)
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: spacing / 2),
+                      child: Text(
+                        ':',
+                        style: TextStyle(
+                          fontSize: _getResponsiveFontSize(context, baseSize: 24.0),
+                          fontWeight: FontWeight.bold,
+                          color: _effectiveTheme.textColor ?? Colors.white,
+                        ),
+                      ),
+                    ),
+                ],
+              );
+            }).toList(),
+          ),
+          if (widget.config.showControls) ...[
+            SizedBox(height: spacing),
+            _buildControlButtons(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDigitalSegment(String segment) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+      decoration: BoxDecoration(
+        color: _effectiveTheme.primaryColor,
+        borderRadius: BorderRadius.circular(4.0),
+      ),
+      child: Text(
+        segment,
+        style: TextStyle(
+          fontSize: _getResponsiveFontSize(context, baseSize: 20.0),
+          fontWeight: FontWeight.bold,
+          color: Colors.white,
+          fontFamily: 'monospace',
+        ),
+      ),
+    );
+  }
+
+  Widget _buildAnalogDisplay() {
+    final spacing = _getResponsiveSpacing(context);
+    final size = _getResponsiveCircularSize(context) * 1.5;
+    final progress = _remaining.getProgress(widget.config.duration);
+    final angle = 2 * math.pi * progress;
+    
+    return Container(
+      padding: _getResponsivePadding(context),
+      margin: _effectiveTheme.margin,
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          SizedBox(
+            width: size,
+            height: size,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                // Clock face
+                Container(
+                  width: size,
+                  height: size,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _effectiveTheme.backgroundColor ?? Colors.grey.shade100,
+                    border: Border.all(
+                      color: _effectiveTheme.borderColor ?? Colors.grey.shade300,
+                      width: 2.0,
+                    ),
+                  ),
+                ),
+                // Progress arc
+                CustomPaint(
+                  size: Size(size, size),
+                  painter: AnalogClockPainter(
+                    progress: progress,
+                    color: _effectiveTheme.primaryColor,
+                    strokeWidth: _getResponsiveStrokeWidth(context),
+                  ),
+                ),
+                // Clock hands
+                Transform.rotate(
+                  angle: angle,
+                  child: Container(
+                    width: 4.0,
+                    height: size / 2 - 20,
+                    decoration: BoxDecoration(
+                      color: _effectiveTheme.primaryColor,
+                      borderRadius: BorderRadius.circular(2.0),
+                    ),
+                  ),
+                ),
+                // Center dot
+                Container(
+                  width: 12.0,
+                  height: 12.0,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: _effectiveTheme.primaryColor,
+                  ),
+                ),
+                // Time text
+                Text(
+                  _formatDuration(_remaining),
+                  style: TextStyle(
+                    fontSize: _getResponsiveFontSize(context, baseSize: 14.0),
+                    fontWeight: FontWeight.bold,
+                    color: _effectiveTheme.textColor ?? _effectiveTheme.primaryColor,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          if (widget.config.showControls) ...[
+            SizedBox(height: spacing),
+            _buildControlButtons(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildProgressBarDisplay() {
+    final spacing = _getResponsiveSpacing(context);
+    final progress = _remaining.getProgress(widget.config.duration);
+    final progressColor = _isLowTime 
+        ? (widget.warningColor ?? Colors.red)
+        : (_effectiveTheme.progressValueColor ?? _effectiveTheme.primaryColor);
+    
+    return Container(
+      padding: _getResponsivePadding(context),
+      margin: _effectiveTheme.margin,
+      decoration: BoxDecoration(
+        color: _effectiveTheme.backgroundColor,
+        borderRadius: BorderRadius.circular(_getResponsiveBorderRadius(context)),
+        boxShadow: _effectiveTheme.boxShadow,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          // Progress bar
+          Container(
+            height: 8.0,
+            decoration: BoxDecoration(
+              color: _effectiveTheme.progressBackgroundColor ?? Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(4.0),
+            ),
+            child: FractionallySizedBox(
+              alignment: Alignment.centerLeft,
+              widthFactor: progress,
+              child: Container(
+                decoration: BoxDecoration(
+                  color: progressColor,
+                  borderRadius: BorderRadius.circular(4.0),
+                ),
+              ),
+            ),
+          ),
+          SizedBox(height: spacing),
+          // Time overlay
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                _formatDuration(_remaining),
+                style: TextStyle(
+                  fontSize: _getResponsiveFontSize(context, baseSize: 16.0),
+                  fontWeight: FontWeight.bold,
+                  color: _effectiveTheme.textColor ?? _effectiveTheme.primaryColor,
+                ),
+              ),
+              Text(
+                '${(progress * 100).round()}%',
+                style: TextStyle(
+                  fontSize: _getResponsiveFontSize(context, baseSize: 12.0),
+                  color: Colors.grey.shade600,
+                ),
+              ),
+            ],
+          ),
+          if (widget.config.showControls) ...[
+            SizedBox(height: spacing),
+            _buildControlButtons(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFloatingDisplay() {
+    final spacing = _getResponsiveSpacing(context);
+    
+    return Container(
+      padding: _getResponsivePadding(context),
+      margin: _effectiveTheme.margin,
+      decoration: BoxDecoration(
+        color: _effectiveTheme.backgroundColor ?? _effectiveTheme.primaryColor,
+        shape: BoxShape.circle,
+        boxShadow: _effectiveTheme.boxShadow ?? [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.timer,
+            color: _effectiveTheme.iconColor ?? Colors.white,
+            size: _getResponsiveIconSize(context),
+          ),
+          SizedBox(height: spacing / 2),
+          Text(
+            _formatDuration(_remaining),
+            style: TextStyle(
+              fontSize: _getResponsiveFontSize(context, baseSize: 14.0),
+              fontWeight: FontWeight.bold,
+              color: _effectiveTheme.textColor ?? Colors.white,
+            ),
+          ),
+          if (widget.config.showControls) ...[
+            SizedBox(height: spacing / 2),
+            _buildControlButtons(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNotificationDisplay() {
+    final spacing = _getResponsiveSpacing(context);
+    
+    return Container(
+      padding: _getResponsivePadding(context),
+      margin: _effectiveTheme.margin,
+      decoration: BoxDecoration(
+        color: _effectiveTheme.backgroundColor ?? Colors.red,
+        borderRadius: BorderRadius.circular(_getResponsiveBorderRadius(context)),
+        boxShadow: _effectiveTheme.boxShadow ?? [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.1),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: 8.0,
+            height: 8.0,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: _effectiveTheme.textColor ?? Colors.white,
+            ),
+          ),
+          SizedBox(width: spacing),
+          Text(
+            _formatDuration(_remaining),
+            style: TextStyle(
+              fontSize: _getResponsiveFontSize(context, baseSize: 12.0),
+              fontWeight: FontWeight.w500,
+              color: _effectiveTheme.textColor ?? Colors.white,
+            ),
+          ),
+          if (widget.config.showControls) ...[
+            SizedBox(width: spacing),
+            _buildControlButtons(),
+          ],
+        ],
+      ),
+    );
+  }
+
+  Widget _buildCustomDisplay() {
+    final customConfig = _effectiveCustomBuilderConfig;
+    
+    // Use custom time builder if provided
+    if (customConfig.timeBuilder != null) {
+      return customConfig.timeBuilder!(
+        context,
+        _remaining,
+        _isRunning,
+        _isPaused,
+      );
+    }
+    
+    // Fallback to minimal display
+    return _buildMinimalDisplay();
+  }
+
   Widget _buildControlButtons() {
     final iconSize = widget.useResponsiveSizing 
         ? ResponsiveUtils.getResponsiveIconSize(context, base: 16.0)
         : 16.0;
     final spacing = _getResponsiveSpacing(context);
+    
+    // Use custom controls builder if provided
+    final customConfig = _effectiveCustomBuilderConfig;
+    if (customConfig.controlsBuilder != null) {
+      return customConfig.controlsBuilder!(
+        context,
+        _isRunning && !_isPaused ? _pauseTimer : null,
+        _isPaused ? _resumeTimer : null,
+        widget.config.showReset ? _resetTimer : null,
+      );
+    }
     
     return Row(
       mainAxisSize: MainAxisSize.min,
@@ -780,5 +1557,45 @@ class _AdvancedCountdownTimerState extends State<AdvancedCountdownTimer>
         ],
       ],
     );
+  }
+}
+
+/// Custom painter for analog clock display
+class AnalogClockPainter extends CustomPainter {
+  final double progress;
+  final Color color;
+  final double strokeWidth;
+
+  AnalogClockPainter({
+    required this.progress,
+    required this.color,
+    required this.strokeWidth,
+  });
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth
+      ..strokeCap = StrokeCap.round;
+
+    final center = Offset(size.width / 2, size.height / 2);
+    final radius = (size.width - strokeWidth) / 2;
+    
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -math.pi / 2, // Start from top
+      -2 * math.pi * progress, // Negative for clockwise
+      false,
+      paint,
+    );
+  }
+
+  @override
+  bool shouldRepaint(AnalogClockPainter oldDelegate) {
+    return oldDelegate.progress != progress ||
+           oldDelegate.color != color ||
+           oldDelegate.strokeWidth != strokeWidth;
   }
 } 
