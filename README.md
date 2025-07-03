@@ -77,7 +77,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_advanced_countdown: ^1.0.0
+  flutter_advanced_countdown: ^1.0.1
 ```
 
 ## 🎯 Quick Start
