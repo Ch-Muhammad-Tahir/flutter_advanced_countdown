@@ -49,6 +49,8 @@ A **professional, feature-rich countdown timer package** for Flutter with **mult
 - **Advanced styling** with custom borders, shapes, and transforms
 - **Custom constraints** and sizing options
 - **Custom decorations** and foreground decorations
+- **Imperative controller API** (start/pause/resume/reset/seek)
+- **Built-in localisation** (en, es, fr) with delegate
 - **Semantic labels** for accessibility
 - **Custom time formatters** and unit labels
 - **Low time warnings** with custom thresholds
@@ -77,7 +79,7 @@ Add this to your package's `pubspec.yaml` file:
 
 ```yaml
 dependencies:
-  flutter_advanced_countdown: ^1.0.2
+  flutter_advanced_countdown: ^1.0.3
 ```
 
 ## 🎯 Quick Start

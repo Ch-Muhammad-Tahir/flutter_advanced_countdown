@@ -5,7 +5,7 @@ class TimeFormatter {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
-    
+
     return '${hours.toString().padLeft(2, '0')}:${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
@@ -13,7 +13,7 @@ class TimeFormatter {
   static String formatMMSS(Duration duration) {
     final minutes = duration.inMinutes;
     final seconds = duration.inSeconds % 60;
-    
+
     return '${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}';
   }
 
@@ -41,21 +41,21 @@ class TimeFormatter {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
-    
+
     final parts = <String>[];
-    
+
     if (hours > 0) {
       parts.add('$hours ${hours == 1 ? 'hour' : 'hours'}');
     }
-    
+
     if (minutes > 0) {
       parts.add('$minutes ${minutes == 1 ? 'minute' : 'minutes'}');
     }
-    
+
     if (seconds > 0 || parts.isEmpty) {
       parts.add('$seconds ${seconds == 1 ? 'second' : 'seconds'}');
     }
-    
+
     return parts.join(' ');
   }
 
@@ -64,21 +64,21 @@ class TimeFormatter {
     final hours = duration.inHours;
     final minutes = duration.inMinutes % 60;
     final seconds = duration.inSeconds % 60;
-    
+
     final parts = <String>[];
-    
+
     if (hours > 0) {
       parts.add('${hours}h');
     }
-    
+
     if (minutes > 0) {
       parts.add('${minutes}m');
     }
-    
+
     if (seconds > 0 || parts.isEmpty) {
       parts.add('${seconds}s');
     }
-    
+
     return parts.join(' ');
   }
 
@@ -89,7 +89,8 @@ class TimeFormatter {
         .replaceAll('{h}', duration.inHours.toString().padLeft(2, '0'))
         .replaceAll('{m}', (duration.inMinutes % 60).toString().padLeft(2, '0'))
         .replaceAll('{s}', (duration.inSeconds % 60).toString().padLeft(2, '0'))
-        .replaceAll('{ms}', (duration.inMilliseconds % 1000).toString().padLeft(3, '0'));
+        .replaceAll('{ms}',
+            (duration.inMilliseconds % 1000).toString().padLeft(3, '0'));
   }
 
   /// Smart format - automatically chooses the best format based on duration
@@ -104,7 +105,8 @@ class TimeFormatter {
   }
 
   /// Format duration for countdown display
-  static String formatCountdown(Duration duration, {bool showMilliseconds = false}) {
+  static String formatCountdown(Duration duration,
+      {bool showMilliseconds = false}) {
     if (showMilliseconds) {
       return formatWithMilliseconds(duration);
     }
@@ -122,11 +124,11 @@ class TimeFormatter {
     if (customPattern != null) {
       return (duration) => formatCustom(duration, customPattern);
     }
-    
+
     if (showMilliseconds) {
       return formatWithMilliseconds;
     }
-    
+
     if (showHours && showMinutes && showSeconds) {
       return formatHHMMSS;
     } else if (showMinutes && showSeconds) {
@@ -137,4 +139,4 @@ class TimeFormatter {
       return formatSmart;
     }
   }
-} 
+}

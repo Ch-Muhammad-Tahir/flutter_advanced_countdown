@@ -4,43 +4,43 @@ import 'package:flutter/material.dart';
 class CountdownConfig {
   /// Duration for the countdown
   final Duration duration;
-  
+
   /// Timer interval (default: 1 second)
   final Duration interval;
-  
+
   /// Whether to auto-start the timer
   final bool autoStart;
-  
+
   /// Whether to show pause/resume controls
   final bool showControls;
-  
+
   /// Whether to show reset control
   final bool showReset;
-  
+
   /// Whether to show milliseconds
   final bool showMilliseconds;
-  
+
   /// Animation duration for transitions
   final Duration animationDuration;
-  
+
   /// Whether to enable haptic feedback
   final bool enableHapticFeedback;
-  
+
   /// Custom formatter for the time display
   final String Function(Duration)? customFormatter;
-  
+
   /// Callback when countdown finishes
   final VoidCallback? onFinish;
-  
+
   /// Callback when countdown is paused
   final VoidCallback? onPause;
-  
+
   /// Callback when countdown is resumed
   final VoidCallback? onResume;
-  
+
   /// Callback when countdown is reset
   final VoidCallback? onReset;
-  
+
   /// Callback for every tick (optional)
   final void Function(Duration remaining)? onTick;
 
@@ -128,4 +128,4 @@ class CountdownConfig {
   String toString() {
     return 'CountdownConfig(duration: $duration, interval: $interval, autoStart: $autoStart, showControls: $showControls, showReset: $showReset, showMilliseconds: $showMilliseconds, animationDuration: $animationDuration, enableHapticFeedback: $enableHapticFeedback)';
   }
-} 
+}

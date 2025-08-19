@@ -1,6 +1,6 @@
 name: flutter_advanced_countdown
 description: A professional, feature-rich countdown timer package for Flutter with full responsive design, multiple display styles, themes, and customization options for all devices.
-version: 1.0.2
+version: 1.0.3
 homepage: https://github.com/Ch-Muhammad-Tahir/flutter_advanced_countdown
 
 environment:
@@ -10,6 +10,10 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+
+  # Added for localisation, vibration feedback and sound notifications
+  intl: ^0.20.2
+  audioplayers: ^6.5.0
 
 dev_dependencies:
   flutter_test:

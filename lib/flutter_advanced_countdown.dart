@@ -8,4 +8,8 @@ export 'src/models/countdown_style.dart';
 export 'src/utils/time_formatter.dart';
 export 'src/utils/haptic_feedback.dart';
 export 'src/utils/responsive_utils.dart';
-export 'src/extensions/duration_extensions.dart'; 
+export 'src/extensions/duration_extensions.dart';
+
+// New in 1.0.3 – controller & localisation
+export 'src/controllers/countdown_timer_controller.dart';
+export 'src/localization/countdown_localizations.dart';

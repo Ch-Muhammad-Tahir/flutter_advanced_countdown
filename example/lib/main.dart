@@ -1,4 +1,4 @@
-import 'package:countdown_timer_package/flutter_advanced_countdown.dart';
+import 'package:flutter_advanced_countdown/flutter_advanced_countdown.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -26,7 +26,8 @@ class CountdownTimerExamplePage extends StatefulWidget {
   const CountdownTimerExamplePage({super.key});
 
   @override
-  State<CountdownTimerExamplePage> createState() => _CountdownTimerExamplePageState();
+  State<CountdownTimerExamplePage> createState() =>
+      _CountdownTimerExamplePageState();
 }
 
 class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
@@ -52,7 +53,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
           children: [
             _buildSectionTitle('🎨 Professional Themes'),
             const SizedBox(height: 16),
-            
+
             // Professional theme
             _buildExampleCard(
               'Professional Theme',
@@ -67,10 +68,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                   enableShadows: true,
                   enableRoundedCorners: true,
                 ),
-                onFinish: () => _showSnackBar('Professional theme timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Professional theme timer finished!'),
               ),
             ),
-            
+
             // Glass morphism theme
             _buildExampleCard(
               'Glass Morphism Theme',
@@ -91,11 +93,12 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                     primaryColor: Colors.white,
                     blurRadius: 15.0,
                   ),
-                  onFinish: () => _showSnackBar('Glass morphism timer finished!'),
+                  onFinish: () =>
+                      _showSnackBar('Glass morphism timer finished!'),
                 ),
               ),
             ),
-            
+
             // Minimal theme
             _buildExampleCard(
               'Minimal Theme',
@@ -109,11 +112,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Minimal theme timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('🚀 New Display Styles'),
             const SizedBox(height: 16),
-            
+
             // Digital display
             _buildExampleCard(
               'Digital Display',
@@ -126,7 +129,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Digital timer finished!'),
               ),
             ),
-            
+
             // Analog display
             _buildExampleCard(
               'Analog Display',
@@ -138,7 +141,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Analog timer finished!'),
               ),
             ),
-            
+
             // Progress bar display
             _buildExampleCard(
               'Progress Bar Display',
@@ -153,7 +156,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Progress bar timer finished!'),
               ),
             ),
-            
+
             // Floating display
             _buildExampleCard(
               'Floating Display',
@@ -168,7 +171,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Floating timer finished!'),
               ),
             ),
-            
+
             // Notification display
             _buildExampleCard(
               'Notification Display',
@@ -180,11 +183,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Notification timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('⚡ Advanced Animations'),
             const SizedBox(height: 16),
-            
+
             // Custom animation config
             _buildExampleCard(
               'Custom Animations',
@@ -203,10 +206,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                   enableFadeAnimation: true,
                 ),
                 theme: CountdownTheme.light(primaryColor: Colors.deepPurple),
-                onFinish: () => _showSnackBar('Custom animations timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Custom animations timer finished!'),
               ),
             ),
-            
+
             // No animations
             _buildExampleCard(
               'No Animations',
@@ -221,11 +225,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('No animations timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('🎯 Custom Builders'),
             const SizedBox(height: 16),
-            
+
             // Custom builder example
             _buildExampleCard(
               'Custom Builder',
@@ -238,7 +242,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                       padding: const EdgeInsets.all(16),
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
-                          colors: isRunning 
+                          colors: isRunning
                               ? [Colors.green, Colors.lightGreen]
                               : [Colors.orange, Colors.deepOrange],
                         ),
@@ -282,11 +286,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 onFinish: () => _showSnackBar('Custom builder timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('🔧 Advanced Styling'),
             const SizedBox(height: 16),
-            
+
             // Advanced styling example
             _buildExampleCard(
               'Advanced Styling',
@@ -317,14 +321,15 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                   alignment: Alignment.center,
                   semanticLabel: 'Advanced styled countdown timer',
                 ),
-                onFinish: () => _showSnackBar('Advanced styling timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Advanced styling timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('📱 Responsive Examples'),
             const SizedBox(height: 16),
-            
+
             // Responsive compact style
             _buildExampleCard(
               'Responsive Compact Style',
@@ -334,10 +339,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 showControls: true,
                 showReset: true,
                 useResponsiveSizing: true,
-                onFinish: () => _showSnackBar('Responsive compact timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Responsive compact timer finished!'),
               ),
             ),
-            
+
             // Responsive detailed style
             _buildExampleCard(
               'Responsive Detailed Style',
@@ -347,10 +353,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 showControls: true,
                 showReset: true,
                 useResponsiveSizing: true,
-                onFinish: () => _showSnackBar('Responsive detailed timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Responsive detailed timer finished!'),
               ),
             ),
-            
+
             // Responsive circular style
             _buildExampleCard(
               'Responsive Circular Style',
@@ -360,10 +367,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 showControls: true,
                 showReset: true,
                 useResponsiveSizing: true,
-                onFinish: () => _showSnackBar('Responsive circular timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Responsive circular timer finished!'),
               ),
             ),
-            
+
             // Responsive card style
             _buildExampleCard(
               'Responsive Card Style',
@@ -373,10 +381,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 showControls: true,
                 showReset: true,
                 useResponsiveSizing: true,
-                onFinish: () => _showSnackBar('Responsive card timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Responsive card timer finished!'),
               ),
             ),
-            
+
             // Responsive gradient style
             _buildExampleCard(
               'Responsive Gradient Style',
@@ -398,15 +407,16 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                     fontWeight: FontWeight.bold,
                     color: Colors.white,
                   ),
-                  onFinish: () => _showSnackBar('Responsive gradient timer finished!'),
+                  onFinish: () =>
+                      _showSnackBar('Responsive gradient timer finished!'),
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('🎨 Custom Responsive Theme'),
             const SizedBox(height: 16),
-            
+
             // Custom responsive theme
             _buildExampleCard(
               'Custom Responsive Theme',
@@ -450,23 +460,24 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                     enableFadeAnimation: true,
                   ),
                 ),
-                onFinish: () => _showSnackBar('Custom responsive theme timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Custom responsive theme timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('📊 Device Information'),
             const SizedBox(height: 16),
-            
+
             _buildExampleCard(
               'Current Device & Screen Info',
               _buildDeviceInfoCard(),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('🔧 Basic Examples (Non-Responsive)'),
             const SizedBox(height: 16),
-            
+
             // Non-responsive examples for comparison
             _buildExampleCard(
               'Non-Responsive Compact Style',
@@ -475,10 +486,11 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 displayStyle: CountdownDisplayStyle.compact,
                 showControls: true,
                 useResponsiveSizing: false,
-                onFinish: () => _showSnackBar('Non-responsive compact timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Non-responsive compact timer finished!'),
               ),
             ),
-            
+
             _buildExampleCard(
               'Non-Responsive Detailed Style',
               AdvancedCountdownTimer(
@@ -486,14 +498,15 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 displayStyle: CountdownDisplayStyle.detailed,
                 showControls: true,
                 useResponsiveSizing: false,
-                onFinish: () => _showSnackBar('Non-responsive detailed timer finished!'),
+                onFinish: () =>
+                    _showSnackBar('Non-responsive detailed timer finished!'),
               ),
             ),
-            
+
             const SizedBox(height: 24),
             _buildSectionTitle('🎮 Provider Integration'),
             const SizedBox(height: 16),
-            
+
             _buildExampleCard(
               'Provider-Based Timer',
               ChangeNotifierProvider.value(
@@ -505,7 +518,9 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                         Text(
                           provider.formattedTime,
                           style: TextStyle(
-                            fontSize: ResponsiveUtils.getResponsiveFontSize(context, base: 32.0),
+                            fontSize: ResponsiveUtils.getResponsiveFontSize(
+                                context,
+                                base: 32.0),
                             fontWeight: FontWeight.bold,
                             color: Theme.of(context).primaryColor,
                           ),
@@ -518,7 +533,8 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                               onPressed: provider.isRunning
                                   ? provider.pauseTimer
                                   : provider.resumeTimer,
-                              child: Text(provider.isRunning ? 'Pause' : 'Resume'),
+                              child:
+                                  Text(provider.isRunning ? 'Pause' : 'Resume'),
                             ),
                             const SizedBox(width: 8),
                             ElevatedButton(
@@ -532,7 +548,8 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                           onPressed: () {
                             provider.startTimer(
                               duration: const Duration(minutes: 2),
-                              onFinish: () => _showSnackBar('Provider timer finished!'),
+                              onFinish: () =>
+                                  _showSnackBar('Provider timer finished!'),
                             );
                           },
                           child: const Text('Start 2-Minute Timer'),
@@ -543,7 +560,7 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
                 ),
               ),
             ),
-            
+
             const SizedBox(height: 100), // Bottom padding
           ],
         ),
@@ -593,16 +610,20 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
         final deviceType = ResponsiveUtils.getDeviceType(context);
         final screenSize = ResponsiveUtils.getScreenSize(context);
         final mediaQuery = MediaQuery.of(context);
-        
+
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             _buildInfoRow('Device Type', deviceType.name.toUpperCase()),
             _buildInfoRow('Screen Size', screenSize.name.toUpperCase()),
-            _buildInfoRow('Screen Width', '${mediaQuery.size.width.toStringAsFixed(0)}px'),
-            _buildInfoRow('Screen Height', '${mediaQuery.size.height.toStringAsFixed(0)}px'),
-            _buildInfoRow('Pixel Ratio', mediaQuery.devicePixelRatio.toStringAsFixed(2)),
-            _buildInfoRow('Platform', Theme.of(context).platform.name.toUpperCase()),
+            _buildInfoRow('Screen Width',
+                '${mediaQuery.size.width.toStringAsFixed(0)}px'),
+            _buildInfoRow('Screen Height',
+                '${mediaQuery.size.height.toStringAsFixed(0)}px'),
+            _buildInfoRow(
+                'Pixel Ratio', mediaQuery.devicePixelRatio.toStringAsFixed(2)),
+            _buildInfoRow(
+                'Platform', Theme.of(context).platform.name.toUpperCase()),
           ],
         );
       },
@@ -643,4 +664,4 @@ class _CountdownTimerExamplePageState extends State<CountdownTimerExamplePage> {
       ),
     );
   }
-} 
+}

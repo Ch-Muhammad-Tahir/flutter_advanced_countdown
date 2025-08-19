@@ -5,6 +5,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.3] - 2025-08-19
+
+### ✨ Added
+- **CountdownTimerController**: imperative API (start / pause / resume / reset / seek)
+- **CountdownLocalizations** delegate with English, Spanish and French defaults
+- **Sound notifications** via `audioplayers` (optional, off by default)
+- **Haptic feedback only**: replaced external vibration package, now uses Flutter’s built-in `HapticFeedback`
+- **Example**: new `controller_demo.dart` showcasing controller + i18n
+
+### 🛠 Changed
+- Removed `vibration` dependency from the core package and example app
+
+### 🧹 Fixed
+- Wrong import paths in example project when used as path dependency
+
+### Migration guide
+No breaking changes. Just `flutter pub upgrade flutter_advanced_countdown` and you can:
+```dart
+final controller = CountdownTimerController();
+AdvancedCountdownTimer(controller: controller, ...);
+```
+
 ## [1.0.2] - 2025-07-03
 
 ### 🚀 Major Enhancements

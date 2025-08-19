@@ -32,7 +32,8 @@ class HapticFeedback {
   /// Trigger selection change haptic feedback
   static Future<void> selectionChanged() async {
     try {
-      await SystemChannels.platform.invokeMethod('HapticFeedback.selectionChanged');
+      await SystemChannels.platform
+          .invokeMethod('HapticFeedback.selectionChanged');
     } catch (e) {
       // Ignore errors on platforms that don't support haptic feedback
     }
@@ -81,4 +82,4 @@ class HapticFeedback {
   static Future<void> forCountdownReset() async {
     await selectionChanged();
   }
-} 
+}

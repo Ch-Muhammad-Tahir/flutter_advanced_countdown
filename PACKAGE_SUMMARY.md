@@ -4,6 +4,13 @@
 
 This document summarizes the professional improvements made to transform the original countdown timer implementation into a production-ready Flutter package.
 
+### New in 1.1.0 (2025-08-19)
+- **Imperative Controller**: `CountdownTimerController` for start/pause/reset/seek.
+- **Localisation layer**: built-in delegate supporting en, es, fr.
+- **Sound notifications**: optional audio cue on finish.
+- **Internal vibration cleanup**: uses Flutter’s `HapticFeedback`, no extra plugin.
+- **Controller Demo**: added to example app.
+
 ## Original Implementation Analysis
 
 ### Issues Identified:

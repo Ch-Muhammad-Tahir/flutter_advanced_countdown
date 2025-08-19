@@ -4,40 +4,40 @@ import 'package:flutter/material.dart';
 enum CountdownDisplayStyle {
   /// Compact display with icon and time
   compact,
-  
+
   /// Detailed display with title and larger time
   detailed,
-  
+
   /// Circular progress indicator with time in center
   circular,
-  
+
   /// Minimal display - just the time
   minimal,
-  
+
   /// Bottom bar style for navigation bars
   bottomBar,
-  
+
   /// Card style with elevation and rounded corners
   card,
-  
+
   /// Gradient style with background gradient
   gradient,
-  
+
   /// Digital display with segmented digits
   digital,
-  
+
   /// Analog clock style display
   analog,
-  
+
   /// Progress bar style with time overlay
   progressBar,
-  
+
   /// Floating action button style
   floating,
-  
+
   /// Notification badge style
   notification,
-  
+
   /// Custom style using custom builder
   custom,
 }
@@ -46,30 +46,31 @@ enum CountdownDisplayStyle {
 class CountdownAnimationConfig {
   /// Whether to enable animations
   final bool enabled;
-  
+
   /// Animation duration for transitions
   final Duration duration;
-  
+
   /// Animation curve for transitions
   final Curve curve;
-  
+
   /// Whether to enable pulse animation when time is low
   final bool enablePulseAnimation;
-  
+
   /// Pulse animation threshold (seconds remaining)
   final int pulseThreshold;
-  
+
   /// Whether to enable shake animation when timer finishes
   final bool enableShakeAnimation;
-  
+
   /// Whether to enable scale animation on state changes
   final bool enableScaleAnimation;
-  
+
   /// Whether to enable fade animation on state changes
   final bool enableFadeAnimation;
-  
+
   /// Custom animation builder
-  final Widget Function(Widget child, Animation<double> animation)? customAnimationBuilder;
+  final Widget Function(Widget child, Animation<double> animation)?
+      customAnimationBuilder;
 
   const CountdownAnimationConfig({
     this.enabled = true,
@@ -92,7 +93,8 @@ class CountdownAnimationConfig {
     bool? enableShakeAnimation,
     bool? enableScaleAnimation,
     bool? enableFadeAnimation,
-    Widget Function(Widget child, Animation<double> animation)? customAnimationBuilder,
+    Widget Function(Widget child, Animation<double> animation)?
+        customAnimationBuilder,
   }) {
     return CountdownAnimationConfig(
       enabled: enabled ?? this.enabled,
@@ -103,7 +105,8 @@ class CountdownAnimationConfig {
       enableShakeAnimation: enableShakeAnimation ?? this.enableShakeAnimation,
       enableScaleAnimation: enableScaleAnimation ?? this.enableScaleAnimation,
       enableFadeAnimation: enableFadeAnimation ?? this.enableFadeAnimation,
-      customAnimationBuilder: customAnimationBuilder ?? this.customAnimationBuilder,
+      customAnimationBuilder:
+          customAnimationBuilder ?? this.customAnimationBuilder,
     );
   }
 }
@@ -111,22 +114,27 @@ class CountdownAnimationConfig {
 /// Custom builder configuration for complete customization
 class CountdownCustomBuilderConfig {
   /// Custom time display builder
-  final Widget Function(BuildContext context, Duration remaining, bool isRunning, bool isPaused)? timeBuilder;
-  
+  final Widget Function(BuildContext context, Duration remaining,
+      bool isRunning, bool isPaused)? timeBuilder;
+
   /// Custom control buttons builder
-  final Widget Function(BuildContext context, VoidCallback? onPause, VoidCallback? onResume, VoidCallback? onReset)? controlsBuilder;
-  
+  final Widget Function(BuildContext context, VoidCallback? onPause,
+      VoidCallback? onResume, VoidCallback? onReset)? controlsBuilder;
+
   /// Custom progress indicator builder
-  final Widget Function(BuildContext context, double progress, Duration remaining, Duration total)? progressBuilder;
-  
+  final Widget Function(BuildContext context, double progress,
+      Duration remaining, Duration total)? progressBuilder;
+
   /// Custom background builder
   final Widget Function(BuildContext context, Widget child)? backgroundBuilder;
-  
+
   /// Custom container builder
   final Widget Function(BuildContext context, Widget child)? containerBuilder;
-  
+
   /// Custom icon builder
-  final Widget Function(BuildContext context, IconData icon, Color? color, double? size)? iconBuilder;
+  final Widget Function(
+          BuildContext context, IconData icon, Color? color, double? size)?
+      iconBuilder;
 
   const CountdownCustomBuilderConfig({
     this.timeBuilder,
@@ -138,12 +146,20 @@ class CountdownCustomBuilderConfig {
   });
 
   CountdownCustomBuilderConfig copyWith({
-    Widget Function(BuildContext context, Duration remaining, bool isRunning, bool isPaused)? timeBuilder,
-    Widget Function(BuildContext context, VoidCallback? onPause, VoidCallback? onResume, VoidCallback? onReset)? controlsBuilder,
-    Widget Function(BuildContext context, double progress, Duration remaining, Duration total)? progressBuilder,
+    Widget Function(BuildContext context, Duration remaining, bool isRunning,
+            bool isPaused)?
+        timeBuilder,
+    Widget Function(BuildContext context, VoidCallback? onPause,
+            VoidCallback? onResume, VoidCallback? onReset)?
+        controlsBuilder,
+    Widget Function(BuildContext context, double progress, Duration remaining,
+            Duration total)?
+        progressBuilder,
     Widget Function(BuildContext context, Widget child)? backgroundBuilder,
     Widget Function(BuildContext context, Widget child)? containerBuilder,
-    Widget Function(BuildContext context, IconData icon, Color? color, double? size)? iconBuilder,
+    Widget Function(
+            BuildContext context, IconData icon, Color? color, double? size)?
+        iconBuilder,
   }) {
     return CountdownCustomBuilderConfig(
       timeBuilder: timeBuilder ?? this.timeBuilder,
@@ -160,31 +176,31 @@ class CountdownCustomBuilderConfig {
 class CountdownAdvancedStyle {
   /// Custom border configuration
   final Border? border;
-  
+
   /// Custom shape configuration
   final OutlinedBorder? shape;
-  
+
   /// Custom clip behavior
   final Clip clipBehavior;
-  
+
   /// Custom alignment
   final AlignmentGeometry? alignment;
-  
+
   /// Custom constraints
   final BoxConstraints? constraints;
-  
+
   /// Custom transform
   final Matrix4? transform;
-  
+
   /// Custom transform alignment
   final AlignmentGeometry? transformAlignment;
-  
+
   /// Custom hit test behavior
   final HitTestBehavior? hitTestBehavior;
-  
+
   /// Custom semantic label
   final String? semanticLabel;
-  
+
   /// Custom exclude from semantics
   final bool? excludeFromSemantics;
 
@@ -232,55 +248,55 @@ class CountdownAdvancedStyle {
 class CountdownTheme {
   /// Primary color for the timer
   final Color primaryColor;
-  
+
   /// Secondary color for the timer
   final Color? secondaryColor;
-  
+
   /// Background color for the timer container
   final Color? backgroundColor;
-  
+
   /// Text color for the timer
   final Color? textColor;
-  
+
   /// Icon color for the timer
   final Color? iconColor;
-  
+
   /// Border color for the timer
   final Color? borderColor;
-  
+
   /// Border radius for the timer container
   final double borderRadius;
-  
+
   /// Border width for the timer
   final double borderWidth;
-  
+
   /// Padding for the timer container
   final EdgeInsetsGeometry? padding;
-  
+
   /// Margin for the timer container
   final EdgeInsetsGeometry? margin;
-  
+
   /// Custom text style for the timer
   final TextStyle? textStyle;
-  
+
   /// Custom text style for the title (in detailed mode)
   final TextStyle? titleTextStyle;
-  
+
   /// Custom text style for the subtitle
   final TextStyle? subtitleTextStyle;
-  
+
   /// Box shadow for the timer container
   final List<BoxShadow>? boxShadow;
-  
+
   /// Gradient for gradient style
   final Gradient? gradient;
-  
+
   /// Progress indicator stroke width (for circular style)
   final double progressStrokeWidth;
-  
+
   /// Progress indicator background color (for circular style)
   final Color? progressBackgroundColor;
-  
+
   /// Progress indicator value color (for circular style)
   final Color? progressValueColor;
 
@@ -418,11 +434,13 @@ class CountdownTheme {
       boxShadow: boxShadow ?? this.boxShadow,
       gradient: gradient ?? this.gradient,
       progressStrokeWidth: progressStrokeWidth ?? this.progressStrokeWidth,
-      progressBackgroundColor: progressBackgroundColor ?? this.progressBackgroundColor,
+      progressBackgroundColor:
+          progressBackgroundColor ?? this.progressBackgroundColor,
       progressValueColor: progressValueColor ?? this.progressValueColor,
       useResponsiveSizing: useResponsiveSizing ?? this.useResponsiveSizing,
       responsiveFontConfig: responsiveFontConfig ?? this.responsiveFontConfig,
-      responsivePaddingConfig: responsivePaddingConfig ?? this.responsivePaddingConfig,
+      responsivePaddingConfig:
+          responsivePaddingConfig ?? this.responsivePaddingConfig,
       responsiveIconConfig: responsiveIconConfig ?? this.responsiveIconConfig,
       animationConfig: animationConfig ?? this.animationConfig,
       customBuilderConfig: customBuilderConfig ?? this.customBuilderConfig,
@@ -551,18 +569,20 @@ class CountdownTheme {
       textColor: Colors.black87,
       iconColor: primaryColor,
       borderRadius: enableRoundedCorners ? 12.0 : 0.0,
-      boxShadow: enableShadows ? [
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.08),
-          blurRadius: 8,
-          offset: const Offset(0, 2),
-        ),
-        BoxShadow(
-          color: Colors.black.withValues(alpha: 0.04),
-          blurRadius: 4,
-          offset: const Offset(0, 1),
-        ),
-      ] : null,
+      boxShadow: enableShadows
+          ? [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.08),
+                blurRadius: 8,
+                offset: const Offset(0, 2),
+              ),
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.04),
+                blurRadius: 4,
+                offset: const Offset(0, 1),
+              ),
+            ]
+          : null,
       animationConfig: CountdownAnimationConfig(
         enabled: enableAnimations,
         duration: const Duration(milliseconds: 250),
@@ -711,4 +731,4 @@ class ResponsiveIconConfig {
     this.lg,
     this.xl,
   });
-} 
+}

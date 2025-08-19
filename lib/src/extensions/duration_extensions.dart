@@ -12,10 +12,12 @@ extension DurationExtensions on Duration {
   String get formattedSS => TimeFormatter.formatSS(this);
 
   /// Get formatted string representation with milliseconds
-  String get formattedWithMilliseconds => TimeFormatter.formatWithMilliseconds(this);
+  String get formattedWithMilliseconds =>
+      TimeFormatter.formatWithMilliseconds(this);
 
   /// Get formatted string representation with full milliseconds
-  String get formattedWithFullMilliseconds => TimeFormatter.formatWithFullMilliseconds(this);
+  String get formattedWithFullMilliseconds =>
+      TimeFormatter.formatWithFullMilliseconds(this);
 
   /// Get formatted string representation with words
   String get formattedWords => TimeFormatter.formatWords(this);
@@ -66,16 +68,20 @@ extension DurationExtensions on Duration {
   }
 
   /// Add another duration
-  Duration operator +(Duration other) => Duration(milliseconds: inMilliseconds + other.inMilliseconds);
+  Duration operator +(Duration other) =>
+      Duration(milliseconds: inMilliseconds + other.inMilliseconds);
 
   /// Subtract another duration
-  Duration operator -(Duration other) => Duration(milliseconds: inMilliseconds - other.inMilliseconds);
+  Duration operator -(Duration other) =>
+      Duration(milliseconds: inMilliseconds - other.inMilliseconds);
 
   /// Multiply duration by a factor
-  Duration operator *(double factor) => Duration(milliseconds: (inMilliseconds * factor).round());
+  Duration operator *(double factor) =>
+      Duration(milliseconds: (inMilliseconds * factor).round());
 
   /// Divide duration by a factor
-  Duration operator /(double factor) => Duration(milliseconds: (inMilliseconds / factor).round());
+  Duration operator /(double factor) =>
+      Duration(milliseconds: (inMilliseconds / factor).round());
 
   /// Check if duration is greater than another
   bool operator >(Duration other) => inMilliseconds > other.inMilliseconds;
@@ -105,50 +111,52 @@ extension DurationExtensions on Duration {
   /// Get duration as a human-readable string
   String get humanReadable {
     if (isZero) return '0 seconds';
-    
+
     final parts = <String>[];
-    
+
     if (inDays > 0) {
       parts.add('${inDays} ${inDays == 1 ? 'day' : 'days'}');
     }
-    
+
     if (remainingHours > 0) {
       parts.add('$remainingHours ${remainingHours == 1 ? 'hour' : 'hours'}');
     }
-    
+
     if (remainingMinutes > 0) {
-      parts.add('$remainingMinutes ${remainingMinutes == 1 ? 'minute' : 'minutes'}');
+      parts.add(
+          '$remainingMinutes ${remainingMinutes == 1 ? 'minute' : 'minutes'}');
     }
-    
+
     if (remainingSeconds > 0 || parts.isEmpty) {
-      parts.add('$remainingSeconds ${remainingSeconds == 1 ? 'second' : 'seconds'}');
+      parts.add(
+          '$remainingSeconds ${remainingSeconds == 1 ? 'second' : 'seconds'}');
     }
-    
+
     return parts.join(' ');
   }
 
   /// Get duration as a short human-readable string
   String get humanReadableShort {
     if (isZero) return '0s';
-    
+
     final parts = <String>[];
-    
+
     if (inDays > 0) {
       parts.add('${inDays}d');
     }
-    
+
     if (remainingHours > 0) {
       parts.add('${remainingHours}h');
     }
-    
+
     if (remainingMinutes > 0) {
       parts.add('${remainingMinutes}m');
     }
-    
+
     if (remainingSeconds > 0 || parts.isEmpty) {
       parts.add('${remainingSeconds}s');
     }
-    
+
     return parts.join(' ');
   }
-} 
+}

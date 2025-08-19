@@ -26,7 +26,7 @@ void main() {
 
     test('should start timer correctly', () {
       provider.startTimer(duration: const Duration(minutes: 2));
-      
+
       expect(provider.remaining, const Duration(minutes: 2));
       expect(provider.isRunning, true);
       expect(provider.isVisible, true);
@@ -36,20 +36,21 @@ void main() {
     test('should pause and resume timer', () {
       provider.startTimer(duration: const Duration(minutes: 1));
       expect(provider.isRunning, true);
-      
+
       provider.pauseTimer();
       expect(provider.isPaused, true);
       expect(provider.isRunning, false);
-      
+
       provider.resumeTimer();
       expect(provider.isPaused, false);
       expect(provider.isRunning, true);
     });
 
     test('should reset timer', () {
-      provider.startTimer(duration: const Duration(minutes: 2), autoStart: false);
+      provider.startTimer(
+          duration: const Duration(minutes: 2), autoStart: false);
       provider.pauseTimer();
-      
+
       provider.resetTimer();
       expect(provider.remaining, const Duration(minutes: 2));
       expect(provider.isPaused, false);
@@ -59,7 +60,7 @@ void main() {
     test('should stop timer', () {
       provider.startTimer(duration: const Duration(minutes: 1));
       provider.stopTimer();
-      
+
       expect(provider.remaining, Duration.zero);
       expect(provider.isRunning, false);
       expect(provider.isPaused, false);
@@ -68,10 +69,10 @@ void main() {
 
     test('should add and subtract time', () {
       provider.startTimer(duration: const Duration(minutes: 1));
-      
+
       provider.addTime(const Duration(seconds: 30));
       expect(provider.remaining, const Duration(minutes: 1, seconds: 30));
-      
+
       provider.subtractTime(const Duration(seconds: 15));
       expect(provider.remaining, const Duration(minutes: 1, seconds: 15));
     });
@@ -85,22 +86,23 @@ void main() {
     test('should calculate progress correctly', () {
       provider.startTimer(duration: const Duration(minutes: 2));
       expect(provider.progress, 0.0);
-      
+
       // Simulate time passing
       provider.setRemainingTime(const Duration(minutes: 1));
       expect(provider.progress, 0.5);
-      
+
       provider.setRemainingTime(Duration.zero);
       expect(provider.progress, 1.0);
     });
 
     test('should format time correctly', () {
-      provider.startTimer(duration: const Duration(hours: 1, minutes: 30, seconds: 45));
+      provider.startTimer(
+          duration: const Duration(hours: 1, minutes: 30, seconds: 45));
       expect(provider.formattedTime, '01:30:45');
-      
+
       provider.setRemainingTime(const Duration(minutes: 5, seconds: 30));
       expect(provider.formattedTime, '05:30');
-      
+
       provider.setRemainingTime(const Duration(seconds: 45));
       expect(provider.formattedTime, '45');
     });
@@ -129,7 +131,8 @@ void main() {
 
     test('should format with words correctly', () {
       final duration = const Duration(hours: 1, minutes: 30, seconds: 45);
-      expect(TimeFormatter.formatWords(duration), '1 hour 30 minutes 45 seconds');
+      expect(
+          TimeFormatter.formatWords(duration), '1 hour 30 minutes 45 seconds');
     });
 
     test('should format with short words correctly', () {
@@ -143,8 +146,10 @@ void main() {
     });
 
     test('should format smart correctly', () {
-      expect(TimeFormatter.formatSmart(const Duration(hours: 1, minutes: 30)), '01:30:00');
-      expect(TimeFormatter.formatSmart(const Duration(minutes: 5, seconds: 30)), '05:30');
+      expect(TimeFormatter.formatSmart(const Duration(hours: 1, minutes: 30)),
+          '01:30:00');
+      expect(TimeFormatter.formatSmart(const Duration(minutes: 5, seconds: 30)),
+          '05:30');
       expect(TimeFormatter.formatSmart(const Duration(seconds: 45)), '45');
     });
   });
@@ -172,7 +177,7 @@ void main() {
     test('should perform arithmetic operations correctly', () {
       final d1 = const Duration(minutes: 2);
       final d2 = const Duration(minutes: 1);
-      
+
       expect(d1 + d2, const Duration(minutes: 3));
       expect(d1 - d2, const Duration(minutes: 1));
       expect(d1 * 2, const Duration(minutes: 4));
@@ -182,7 +187,7 @@ void main() {
     test('should compare durations correctly', () {
       final d1 = const Duration(minutes: 2);
       final d2 = const Duration(minutes: 1);
-      
+
       expect(d1 > d2, true);
       expect(d1 < d2, false);
       expect(d1 >= d2, true);
@@ -192,7 +197,7 @@ void main() {
     test('should find min and max correctly', () {
       final d1 = const Duration(minutes: 2);
       final d2 = const Duration(minutes: 1);
-      
+
       expect(d1.min(d2), d2);
       expect(d1.max(d2), d1);
     });
@@ -201,7 +206,7 @@ void main() {
       final duration = const Duration(minutes: 2);
       final min = const Duration(minutes: 1);
       final max = const Duration(minutes: 3);
-      
+
       expect(duration.clamp(min, max), duration);
       expect(duration.clamp(max, max), max);
       expect(duration.clamp(min, min), min);
@@ -220,7 +225,7 @@ void main() {
         duration: const Duration(minutes: 5),
         onFinish: () {},
       );
-      
+
       expect(config.duration, const Duration(minutes: 5));
       expect(config.interval, const Duration(seconds: 1));
       expect(config.autoStart, true);
@@ -234,12 +239,12 @@ void main() {
         duration: const Duration(minutes: 5),
         showControls: true,
       );
-      
+
       final copied = original.copyWith(
         duration: const Duration(minutes: 10),
         showReset: true,
       );
-      
+
       expect(copied.duration, const Duration(minutes: 10));
       expect(copied.showControls, true);
       expect(copied.showReset, true);
@@ -249,7 +254,7 @@ void main() {
       final config1 = CountdownConfig(duration: const Duration(minutes: 5));
       final config2 = CountdownConfig(duration: const Duration(minutes: 5));
       final config3 = CountdownConfig(duration: const Duration(minutes: 10));
-      
+
       expect(config1 == config2, true);
       expect(config1 == config3, false);
     });
@@ -258,7 +263,7 @@ void main() {
   group('CountdownTheme Tests', () {
     test('should create theme with default values', () {
       final theme = CountdownTheme();
-      
+
       expect(theme.primaryColor, Colors.blue);
       expect(theme.borderRadius, 8.0);
       expect(theme.borderWidth, 1.0);
@@ -267,7 +272,7 @@ void main() {
 
     test('should create light theme correctly', () {
       final theme = CountdownTheme.light(primaryColor: Colors.red);
-      
+
       expect(theme.primaryColor, Colors.red);
       expect(theme.backgroundColor, Colors.white);
       expect(theme.textColor, Colors.black87);
@@ -276,7 +281,7 @@ void main() {
 
     test('should create dark theme correctly', () {
       final theme = CountdownTheme.dark(primaryColor: Colors.green);
-      
+
       expect(theme.primaryColor, Colors.green);
       expect(theme.backgroundColor, Colors.grey.shade900);
       expect(theme.textColor, Colors.white);
@@ -289,8 +294,9 @@ void main() {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
       );
-      final theme = CountdownTheme.gradient(colors: [Colors.purple, Colors.blue]);
-      
+      final theme =
+          CountdownTheme.gradient(colors: [Colors.purple, Colors.blue]);
+
       expect(theme.gradient, gradient);
       expect(theme.textColor, Colors.white);
       expect(theme.iconColor, Colors.white);
@@ -299,9 +305,9 @@ void main() {
     test('should copy theme correctly', () {
       final original = CountdownTheme(primaryColor: Colors.red);
       final copied = original.copyWith(primaryColor: Colors.blue);
-      
+
       expect(copied.primaryColor, Colors.blue);
       expect(copied.borderRadius, original.borderRadius);
     });
   });
-} 
+}

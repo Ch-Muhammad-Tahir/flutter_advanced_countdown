@@ -2,7 +2,7 @@ name: countdown_timer_example
 description: Example app for the countdown timer package.
 publish_to: 'none'
 
-version: 1.0.0+1
+version: 1.0.3+1
 
 environment:
   sdk: '>=3.0.0 <4.0.0'
@@ -10,7 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  countdown_timer_package:
+  flutter_advanced_countdown:
     path: ../
   provider: ^6.1.4
 
